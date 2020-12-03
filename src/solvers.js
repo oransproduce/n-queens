@@ -68,33 +68,51 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
   let solutions = {};
   let board = new Board({n: n});
-  let recurse = function(board, row) {
-    // if (pieceCount === n) {
-    //   solutions[JSON.stringify(board.rows())] = 1;
-    //   return;
-    // }
-    // for (let row of rows) {
-    //   for (let col of cols) {
-    //     if (!board.hasPotentialRowConflictAt(row) && !board.hasPotentialColConflictAt(col)) {
-    //       board.togglePiece(row, col);
-    //       pieceCount++;
-    //       let newRows = rows.filter(y => y !== row);
-    //       let newCols = cols.filter(x => x !== col);
-    //       recurse(board, [newRows, newCols], pieceCount);
-    //       board.togglePiece(row, col);
-    //       pieceCount--;
-    //     }
-
-
-    //   }
-    // }
-    // for (let square of row) {
-
-    // }
+  let recurse = function(board, rowNum) {
+    debugger;
+    let total = 0;
+    if (rowNum > board.get('n') - 1) {
+      return 1;
+    }
+    for (var i = 0; i < board.get(rowNum).length; i++) {
+      if (!board.hasPotentialColConflictAt(i) && board.get(rowNum)[i] !== 1) {
+        board.togglePiece(rowNum, i);
+        let newRow = rowNum + 1;
+        total += recurse(board, newRow);
+        board.togglePiece(rowNum, i);
+      }
+    }
+    return total;
   };
-  recurse(board, [_.range(n), _.range(n)], 0);
-  return Object.keys(solutions).length;
+  return recurse(board, 0);
+
 };
+// if (pieceCount === n) {
+//   solutions[JSON.stringify(board.rows())] = 1;
+//   return;
+// }
+// for (let row of rows) {
+//   for (let col of cols) {
+//     if (!board.hasPotentialRowConflictAt(row) && !board.hasPotentialColConflictAt(col)) {
+//       board.togglePiece(row, col);
+//       pieceCount++;
+//       let newRows = rows.filter(y => y !== row);
+//       let newCols = cols.filter(x => x !== col);
+//       recurse(board, [newRows, newCols], pieceCount);
+//       board.togglePiece(row, col);
+//       pieceCount--;
+//     }
+
+
+//   }
+// }
+// for (let square of row) {
+
+// }
+//   };
+//   recurse(board, [_.range(n), _.range(n)], 0);
+//   return Object.keys(solutions).length;
+// };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
